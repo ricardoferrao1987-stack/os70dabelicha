@@ -243,8 +243,16 @@ export default function App() {
               <a href={colUrl} target="_blank" rel="noopener noreferrer" style={{ color: N, fontWeight: 600, textDecoration: "none", borderBottom: `1px solid ${NN}` }}>Bordallo Pinheiro</a>
               {" "}— cerâmica artesanal pintada à mão, inspirada na oliveira e na paisagem alentejana.
             </p>
-            <p style={{ color: NM, fontSize: 13, lineHeight: 1.7, fontWeight: 300, marginTop: 12 }}>
-              Clica no nome da peça para a ver no site. Clica em "Eu ofereço" para reservar.
+
+            <div style={{ margin: "24px auto", padding: "20px 24px", background: "rgba(43,69,112,0.03)", borderRadius: 12, border: `1px solid rgba(43,69,112,0.06)`, maxWidth: 420 }}>
+              <p style={{ fontFamily: f, fontStyle: "italic", fontSize: 15, color: N, margin: "0 0 8px", lineHeight: 1.6 }}>Como funciona?</p>
+              <p style={{ color: NF, fontSize: 13, lineHeight: 1.9, fontWeight: 300, margin: 0 }}>
+                Cada pessoa escolhe a peça (ou peças) que quer oferecer e trata de a comprar — no site da Bordallo Pinheiro ou numa loja. Esta lista serve apenas para nos coordenarmos e evitar repetidos.
+              </p>
+            </div>
+
+            <p style={{ color: NM, fontSize: 13, lineHeight: 1.7, fontWeight: 300 }}>
+              Clica no nome da peça para a ver no site. Reserva aqui com o teu nome.
             </p>
           </div>
 
@@ -269,8 +277,10 @@ export default function App() {
                 {ps.map((p, pi) => {
                   const claimers = who(p.id)
                   const tc = tot(p.id)
-                  const full = p.multi ? tc >= p.max : tc > 0
+                  const hasMax = p.multi && p.max
+                  const full = hasMax && tc >= p.max
                   const open = form === p.id
+                  const remaining = hasMax ? p.max - tc : 99
 
                   return (
                     <div key={p.id} style={{
@@ -286,16 +296,17 @@ export default function App() {
                             onMouseEnter={e => e.target.style.borderBottomColor = NN}
                             onMouseLeave={e => e.target.style.borderBottomColor = "transparent"}
                           >{p.name}</a>
-                          {full && <span style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: GS, fontWeight: 500 }}>reservado</span>}
+                          {tc > 0 && !hasMax && <span style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: GS, fontWeight: 500 }}>reservado</span>}
+                          {full && <span style={{ fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: GS, fontWeight: 500 }}>completo</span>}
                         </div>
                         <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
                           <span style={{ fontSize: 12, color: NM, fontWeight: 300, fontStyle: "italic" }}>{p.desc}</span>
-                          <span style={{ fontFamily: f, fontSize: 16, fontWeight: 500, color: N, whiteSpace: "nowrap" }}>{p.price}€</span>
+                          <span style={{ fontFamily: f, fontSize: 16, fontWeight: 500, color: N, whiteSpace: "nowrap" }}>{p.price}€{hasMax ? " /un." : ""}</span>
                         </div>
                       </div>
 
                       {/* Multi-unit progress */}
-                      {p.multi && (
+                      {hasMax && (
                         <div style={{ marginTop: 10, maxWidth: 200 }}>
                           <div style={{ height: 2, background: BGD, borderRadius: 1, overflow: "hidden" }}>
                             <div style={{ height: "100%", borderRadius: 1, background: tc >= p.max ? GS : N, width: `${(tc / p.max) * 100}%`, transition: "width 0.4s", opacity: 0.6 }} />
@@ -309,7 +320,7 @@ export default function App() {
                         <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 8 }}>
                           {claimers.map((c, i) => (
                             <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", background: GBG, borderRadius: 100, fontSize: 12, color: GS, fontWeight: 500 }}>
-                              {c.name}{p.multi && c.qty > 1 ? ` ×${c.qty}` : ""}
+                              {c.name}{c.qty > 1 ? ` ×${c.qty}` : ""}
                               <button onClick={() => del(p.id, i)} style={{ background: "none", border: "none", color: "#b8c0ab", fontSize: 10, cursor: "pointer", padding: 0, lineHeight: 1 }}>✕</button>
                             </div>
                           ))}
@@ -332,14 +343,14 @@ export default function App() {
                             style={{ padding: "8px 14px", border: `1px solid ${BGD}`, borderRadius: 100, fontSize: 13, fontFamily: s, background: "transparent", outline: "none", color: N, width: 180 }}
                             onFocus={e => e.target.style.borderColor = NM}
                             onBlur={e => e.target.style.borderColor = BGD}
-                            onKeyDown={e => { if (e.key === "Enter" && nm.trim()) save(p.id, nm.trim(), p.multi ? qt : 1) }}
+                            onKeyDown={e => { if (e.key === "Enter" && nm.trim()) save(p.id, nm.trim(), qt) }}
                           />
-                          {p.multi && (
+                          {hasMax && remaining > 0 && (
                             <select value={qt} onChange={e => setQt(+e.target.value)} style={{ padding: "8px 12px", border: `1px solid ${BGD}`, borderRadius: 100, fontSize: 13, fontFamily: s, background: "transparent", color: N }}>
-                              {Array.from({ length: Math.min(p.max - tc, 4) }, (_, i) => i + 1).map(n => <option key={n} value={n}>{n} un.</option>)}
+                              {Array.from({ length: Math.min(remaining, 6) }, (_, i) => i + 1).map(n => <option key={n} value={n}>{n} un.</option>)}
                             </select>
                           )}
-                          <button onClick={() => { if (nm.trim()) save(p.id, nm.trim(), p.multi ? qt : 1) }} disabled={!nm.trim() || sv}
+                          <button onClick={() => { if (nm.trim()) save(p.id, nm.trim(), qt) }} disabled={!nm.trim() || sv}
                             style={{ padding: "8px 20px", background: nm.trim() ? N : BGD, color: nm.trim() ? BG : NM, border: "none", borderRadius: 100, fontSize: 11, fontWeight: 500, cursor: nm.trim() ? "pointer" : "default", letterSpacing: 2, fontFamily: s, textTransform: "uppercase" }}>{sv ? "..." : "Confirmar"}</button>
                           <button onClick={() => { setForm(null); setNm("") }}
                             style={{ padding: "8px 16px", background: "none", border: `1px solid ${BGD}`, borderRadius: 100, fontSize: 11, color: NM, cursor: "pointer", fontFamily: s, letterSpacing: 1 }}>Cancelar</button>
@@ -360,10 +371,10 @@ export default function App() {
             />
             <Ornament />
             <p style={{ fontSize: 12, color: NM, fontWeight: 300, lineHeight: 1.9, maxWidth: 420, margin: "20px auto 0" }}>
-              As peças serão compradas em conjunto.<br />
+              Cada pessoa pode comprar a sua peça no{" "}
               <a href={colUrl} target="_blank" rel="noopener noreferrer" style={{ color: N, fontWeight: 500, textDecoration: "none", borderBottom: `1px solid ${NN}` }}>
-                Ver a coleção Olival no site da Bordallo Pinheiro
-              </a>
+                site da Bordallo Pinheiro
+              </a>{" "}ou numa loja.
             </p>
             <p style={{ fontFamily: f, fontStyle: "italic", fontSize: 14, color: NM, marginTop: 28, opacity: 0.5 }}>
               Feito com carinho para a Belicha

@@ -69,7 +69,7 @@ export default function App() {
   const [qt, setQt] = useState(1)
   const [ld, setLd] = useState(true)
   const [sv, setSv] = useState(false)
-  const [tab, setTab] = useState("gifts")
+  const [tab, setTab] = useState("details")
 
   const refresh = useCallback(async () => { setCl(await loadClaims()) }, [])
 
@@ -173,7 +173,7 @@ export default function App() {
 
       {/* ═══════════════════ NAV ═══════════════════ */}
       <div style={{ display: "flex", justifyContent: "center", gap: 48, padding: "0 2rem", position: "sticky", top: 0, background: `${BG}ee`, zIndex: 10, backdropFilter: "blur(10px)" }}>
-        {[["details", "Detalhes"], ["gifts", "Presente"]].map(([k, l]) => (
+        {[["details", "O Convite"], ["gifts", "Presente"]].map(([k, l]) => (
           <button key={k} onClick={() => setTab(k)} style={{
             padding: "18px 0", fontSize: 11, fontWeight: 400, letterSpacing: 4,
             textTransform: "uppercase", color: tab === k ? N : NM,

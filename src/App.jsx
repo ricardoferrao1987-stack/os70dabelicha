@@ -70,6 +70,21 @@ export default function App() {
   const [ld, setLd] = useState(true)
   const [sv, setSv] = useState(false)
   const [tab, setTab] = useState("details")
+  const [myNames, setMyNames] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("belicha70-mynames") || "[]") } catch { return [] }
+  })
+
+  const rememberName = (name) => {
+    const normalized = name.trim().toLowerCase()
+    localStorage.setItem("belicha70-lastname", name.trim())
+    setMyNames(prev => {
+      const updated = prev.includes(normalized) ? prev : [...prev, normalized]
+      localStorage.setItem("belicha70-mynames", JSON.stringify(updated))
+      return updated
+    })
+  }
+
+  const isMyName = (name) => myNames.includes(name.trim().toLowerCase())
 
   const refresh = useCallback(async () => { setCl(await loadClaims()) }, [])
 
@@ -82,6 +97,7 @@ export default function App() {
   const save = async (pid, n, q) => {
     setSv(true)
     try {
+      rememberName(n)
       const entry = await addClaim(pid, n, q)
       setCl(prev => {
         const u = { ...prev }
@@ -315,21 +331,27 @@ export default function App() {
                         </div>
                       )}
 
-                      {/* Who claimed */}
+                      {/* Who claimed — names hidden, count shown */}
                       {claimers.length > 0 && (
-                        <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 8 }}>
-                          {claimers.map((c, i) => (
-                            <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", background: GBG, borderRadius: 100, fontSize: 12, color: GS, fontWeight: 500 }}>
-                              {c.name}{c.qty > 1 ? ` ×${c.qty}` : ""}
-                              <button onClick={() => del(p.id, i)} style={{ background: "none", border: "none", color: "#b8c0ab", fontSize: 10, cursor: "pointer", padding: 0, lineHeight: 1 }}>✕</button>
-                            </div>
-                          ))}
+                        <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+                          <span style={{ fontSize: 12, color: GS, fontWeight: 500, padding: "4px 12px", background: GBG, borderRadius: 100 }}>
+                            {tc === 1 ? "1 pessoa reservou" : `${tc > 1 && hasMax ? tc + " un. reservadas" : claimers.length + (claimers.length === 1 ? " pessoa reservou" : " pessoas reservaram")}`}
+                          </span>
+                          {claimers.filter(c => isMyName(c.name)).map((c, i) => {
+                            const realIdx = claimers.indexOf(c)
+                            return (
+                              <div key={i} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", background: "rgba(43,69,112,0.06)", borderRadius: 100, fontSize: 12, color: N, fontWeight: 500 }}>
+                                Tu{c.qty > 1 ? ` ×${c.qty}` : ""}
+                                <button onClick={() => del(p.id, realIdx)} style={{ background: "none", border: "none", color: NM, fontSize: 10, cursor: "pointer", padding: 0, lineHeight: 1 }}>✕</button>
+                              </div>
+                            )
+                          })}
                         </div>
                       )}
 
                       {/* Claim button */}
                       {!full && !open && (
-                        <button onClick={() => { setForm(p.id); setQt(1) }}
+                        <button onClick={() => { setForm(p.id); setQt(1); setNm(localStorage.getItem("belicha70-lastname") || "") }}
                           style={{ marginTop: 12, padding: "8px 20px", background: "none", border: `1px solid ${BGD}`, borderRadius: 100, fontSize: 11, color: NM, cursor: "pointer", letterSpacing: 2, fontFamily: s, textTransform: "uppercase", fontWeight: 400, transition: "all 0.25s" }}
                           onMouseEnter={e => { e.target.style.borderColor = N; e.target.style.color = N }}
                           onMouseLeave={e => { e.target.style.borderColor = BGD; e.target.style.color = NM }}

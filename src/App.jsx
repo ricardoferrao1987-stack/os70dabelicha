@@ -14,6 +14,7 @@ const GBG = "#e8f0e6"
 /* ── data ── */
 const ptUrl = (s, k) => `https://pt.bordallopinheiro.com/pt_PT/${s}/${k}.html`
 const colUrl = "https://pt.bordallopinheiro.com/pt_PT/colecoes/olival-1/"
+const SALA = import.meta.env.VITE_SALA || "Sala dos Espelhos"
 
 const PIECES = [
   { id: "pitcher", name: "Jarro 2.5L", price: 128, url: ptUrl("jarro", "65032000"), desc: "Centro de mesa escultórico", cat: 0 },
@@ -180,10 +181,6 @@ export default function App() {
           <p style={{ fontSize: 12, letterSpacing: 4, textTransform: "uppercase", color: N, margin: "40px 0 0", fontWeight: 400, lineHeight: 2 }}>
             Quinta das Lágrimas<br />Coimbra
           </p>
-
-          <p style={{ fontSize: 11, letterSpacing: 4, textTransform: "uppercase", color: NM, margin: "32px 0 0", fontWeight: 400 }}>
-            Confirmar até dia 8 de março
-          </p>
         </div>
       </div>
 
@@ -209,7 +206,7 @@ export default function App() {
             style={{ right: -30, top: -10, width: 200, opacity: 0.1, transform: "scaleX(-1)" }}
           />
 
-          <div style={{ maxWidth: 400, margin: "0 auto", position: "relative", zIndex: 1 }}>
+          <div style={{ maxWidth: 420, margin: "0 auto", position: "relative", zIndex: 1 }}>
             <p style={{ fontFamily: f, fontStyle: "italic", fontSize: 30, color: N, margin: "0 0 32px", lineHeight: 1.3 }}>
               29 . março . 2026
             </p>
@@ -226,16 +223,54 @@ export default function App() {
               <p style={{ fontSize: 12, letterSpacing: 4, textTransform: "uppercase", color: NM, margin: 0, fontWeight: 400 }}>Coimbra</p>
             </div>
 
-            <div style={{ margin: "48px 0" }}>
-              <p style={{ fontSize: 12, letterSpacing: 4, textTransform: "uppercase", color: NM, margin: "0 0 8px" }}>Confirmar presença</p>
-              <p style={{ fontSize: 16, color: N, margin: 0, fontWeight: 400 }}>Até dia <strong style={{ fontWeight: 600 }}>8 de Março</strong></p>
-            </div>
-
             <Ornament />
 
-            <p style={{ fontSize: 15, color: N, margin: "36px 0 0", lineHeight: 1.8, fontStyle: "italic", fontFamily: f }}>
-              Isto é uma festa surpresa —<br />por favor não comentem nada com a Belicha!
-            </p>
+            {/* ── O Plano ── */}
+            <div style={{ margin: "48px 0 0" }}>
+              <p style={{ fontSize: 10, letterSpacing: 5, textTransform: "uppercase", color: NM, margin: "0 0 20px", fontWeight: 500 }}>O Plano</p>
+
+              <div style={{ textAlign: "left", maxWidth: 380, margin: "0 auto" }}>
+                <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
+                  <div style={{ minWidth: 48, textAlign: "right" }}>
+                    <p style={{ fontFamily: f, fontSize: 16, fontWeight: 600, color: N, margin: 0 }}>12:30</p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 14, color: N, margin: 0, lineHeight: 1.8, fontWeight: 400 }}>
+                      Encontramo-nos na <strong style={{ fontWeight: 600 }}>{SALA}</strong> da Quinta das Lágrimas. Pedimos que estejam presentes a esta hora para que esteja tudo pronto.
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
+                  <div style={{ minWidth: 48, textAlign: "right" }}>
+                    <p style={{ fontFamily: f, fontSize: 16, fontWeight: 600, color: N, margin: 0 }}>13:00</p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 14, color: N, margin: 0, lineHeight: 1.8, fontWeight: 400 }}>
+                      A Belicha chega — é neste momento que fazemos a surpresa. Queremos que ela entre e encontre toda a gente à sua espera.
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: 16 }}>
+                  <div style={{ minWidth: 48, textAlign: "right" }}>
+                    <p style={{ fontFamily: f, fontSize: 16, fontWeight: 600, color: N, margin: 0 }}>13:00+</p>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 14, color: N, margin: 0, lineHeight: 1.8, fontWeight: 400 }}>
+                      Almoço de celebração — com calma, como deve ser.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ margin: "48px 0 0" }}>
+              <Ornament />
+              <p style={{ fontSize: 15, color: N, margin: "36px 0 0", lineHeight: 1.8, fontStyle: "italic", fontFamily: f }}>
+                Isto é uma festa surpresa —<br />por favor não comentem nada com a Belicha!
+              </p>
+            </div>
           </div>
         </div>
       )}

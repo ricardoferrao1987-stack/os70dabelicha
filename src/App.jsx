@@ -286,13 +286,17 @@ export default function App() {
 
           {/* Intro */}
           <div style={{ textAlign: "center", maxWidth: 480, margin: "0 auto 3.5rem", position: "relative", zIndex: 1 }}>
-            <p style={{ fontFamily: f, fontStyle: "italic", fontSize: 28, color: N, margin: "0 0 20px", lineHeight: 1.3 }}>Presente Comum</p>
+            <p style={{ fontFamily: f, fontStyle: "italic", fontSize: 28, color: N, margin: "0 0 20px", lineHeight: 1.3 }}>Sugestão de Presente</p>
             <Ornament />
             <p style={{ color: NF, fontSize: 14, lineHeight: 2, fontWeight: 300, marginTop: 20 }}>
-              Vamos juntar-nos para oferecer à Belicha a coleção{" "}
+              Temos uma ideia de presente conjunto: a coleção{" "}
               <strong style={{ fontWeight: 600, color: N }}>Olival</strong> da{" "}
               <a href={colUrl} target="_blank" rel="noopener noreferrer" style={{ color: N, fontWeight: 600, textDecoration: "none", borderBottom: `1px solid ${NN}` }}>Bordallo Pinheiro</a>
               {" "}— cerâmica artesanal pintada à mão, inspirada na oliveira e na paisagem alentejana.
+            </p>
+
+            <p style={{ fontFamily: f, fontStyle: "italic", fontSize: 14, color: NM, lineHeight: 1.8, marginTop: 16 }}>
+              Esta é apenas uma sugestão — a Belicha vai adorar qualquer presente escolhido por vós. Quem quiser participar no presente conjunto, é bem-vindo; quem preferir oferecer algo pessoal, igualmente.
             </p>
 
             <div style={{ margin: "24px auto", padding: "20px 24px", background: "rgba(43,69,112,0.03)", borderRadius: 12, border: `1px solid rgba(43,69,112,0.06)`, maxWidth: 420 }}>
